@@ -996,8 +996,10 @@ Cudd_SetVarOrderConstraint(
   int lowerVarIndex)
 {
     if (upperVarIndex >= unique->size || upperVarIndex < 0 ||
-        lowerVarIndex >= unique->size || lowerVarIndex < 0)
+        lowerVarIndex >= unique->size || lowerVarIndex < 0) {
+        unique->errorCode = CUDD_INVALID_ARG;
         return (0);
+    }
 
     int *value = malloc(sizeof(*value));
     if (value == NULL) {
@@ -1011,6 +1013,7 @@ Cudd_SetVarOrderConstraint(
             &unique->subtables[unique->perm[upperVarIndex]].stayAboveIndices,
             cuddCompareVarIndices);
     if (foundOrInserted == NULL) {
+        free(value);
         unique->errorCode = CUDD_MEMORY_OUT;
         return (0);
     } else if (*foundOrInserted != value) {
@@ -1044,8 +1047,10 @@ Cudd_RemoveVarOrderConstraint(
   int lowerVarIndex)
 {
     if (upperVarIndex >= unique->size || upperVarIndex < 0 ||
-        lowerVarIndex >= unique->size || lowerVarIndex < 0)
+        lowerVarIndex >= unique->size || lowerVarIndex < 0) {
+        unique->errorCode = CUDD_INVALID_ARG;
         return (0);
+    }
 
     /* find tree node to dereference its value later */
     int **varNode = tfind(
